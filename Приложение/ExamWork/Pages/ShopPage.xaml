@@ -1,0 +1,88 @@
+﻿<Page x:Class="ExamWork.Pages.ShopPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ExamWork.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ShopPage"
+      Loaded="Page_Loaded">
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--ШАПКА-->
+        <Border Background="#FFCC99" Margin="4">
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="40"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="2">
+                    <Image  Source="/Images/user.png" Margin="0,6,0,6" />
+                    <Label VerticalAlignment="Center" x:Name="UserFullnameLabel" Content="Гость" FontSize="15"/>
+                </StackPanel>
+                <Image x:Name="CartImage" Grid.Column="3" Source="/Images/cart.png" Height="20" DockPanel.Dock="Right" MouseDown="CartImage_MouseDown" Style="{StaticResource HoverImage}"/>
+                <Image x:Name="ExitImage" Grid.Column="4" Source="/Images/exit.png" Height="20" DockPanel.Dock="Right" MouseDown="ExitImage_MouseDown" Style="{StaticResource HoverImage}"/>
+            </Grid>
+        </Border>
+
+        <!--ПОИСК И ФИЛЬТРАЦИЯ-->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <!--ПОИСК-->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="140"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Поиск: " Grid.Column="0"/>
+                <TextBox x:Name="SearchTextBox" Grid.Column="1" VerticalContentAlignment="Center"/>
+                <Label x:Name="countLabel" Content="Показано 0 из 0" Grid.Column="2" />
+            </Grid>
+
+            <!--ФИЛЬТРАЦИЯ-->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <ComboBox x:Name="DiscountFilterComboBox" SelectedIndex="0" SelectedValuePath="1" Width="150"  Margin="5" Grid.Column="0" >
+                    <ComboBoxItem Content="Все диапазоны"/>
+                    <ComboBoxItem Content="0 - 9.99 %"/>
+                    <ComboBoxItem Content="10 - 14.99 %"/>
+                    <ComboBoxItem Content="15 % и более"/>
+                </ComboBox>
+                
+                <ComboBox x:Name="SortComboBox" SelectedIndex="0" Width="150"  Margin="5" Grid.Column="1">
+                    <ComboBoxItem Content="По возрастанию"/>
+                    <ComboBoxItem Content="По убыванию"/>
+                </ComboBox>
+            </Grid>
+        </Grid>
+
+        <!--ТОВАРЫ-->
+        <ScrollViewer Grid.Row="2">
+            <StackPanel x:Name="MainStackPanel">
+                <!-- Сюда генерируются товары-->
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
