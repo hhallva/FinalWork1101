@@ -4,7 +4,7 @@ using System.Data;
 
 namespace ExamWork.Classes
 {
-    internal class DataAccessLayer
+    public class DataAccessLayer
     {
         #region Свойства
         public static string ServerName { get; set; } = @"MSI";
