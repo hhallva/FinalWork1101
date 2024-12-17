@@ -10,10 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\backArrow.png" />
     <None Remove="Images\cart.png" />
+    <None Remove="Images\enter.png" />
     <None Remove="Images\exit.png" />
     <None Remove="Images\logo.png" />
     <None Remove="Images\product.png" />
+    <None Remove="Images\settings.png" />
     <None Remove="Images\user.png" />
   </ItemGroup>
 
@@ -34,7 +37,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\backArrow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\cart.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\enter.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\exit.png">
@@ -44,6 +53,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\product.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\settings.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\user.png">
@@ -64,6 +76,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>
