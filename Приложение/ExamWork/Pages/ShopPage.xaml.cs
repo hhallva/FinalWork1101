@@ -1,5 +1,4 @@
 ﻿using ExamWork.Classes;
-using Microsoft.VisualBasic.ApplicationServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
