@@ -105,7 +105,7 @@ namespace ExamWork.Classes
             return products;
         }
 
-        //Метод получабщий количество товаров
+        //Метод получающий количество товаров
         public static int GetProductsCount()
         {
             SqlConnection connection = new(ConnectionString);
