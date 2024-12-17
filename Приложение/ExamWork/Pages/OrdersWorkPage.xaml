@@ -1,0 +1,47 @@
+﻿<Page x:Class="ExamWork.Pages.OrdersWorkPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ExamWork.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="OrdersWorkPage"
+      Loaded="Page_Loaded">
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--ШАПКА-->
+        <Border Background="#FFCC99" Margin="4">
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="40"/>
+                </Grid.ColumnDefinitions>
+                
+                <Label HorizontalAlignment="Left" VerticalAlignment="Center" Content="Окно работы с заказами" FontSize="15"/>
+                <StackPanel Orientation="Horizontal" Grid.Column="2">
+                   
+                    <Image  Source="/Images/user.png" Margin="0,6,0,6" />
+                    <Label VerticalAlignment="Center" x:Name="UserFullnameLabel" Content="ФИО" FontSize="15"/>
+                    <Label VerticalAlignment="Center" x:Name="RoleLabel" Content="(Роль)" FontSize="15"/>
+                </StackPanel>
+                <Image x:Name="BackImage" Grid.Column="4" Height="20" Source="/Images/backArrow.png" DockPanel.Dock="Right" MouseDown="BackImage_MouseDown" Style="{StaticResource HoverImage}"/>
+            </Grid>
+        </Border>
+
+        <!--Заказы-->
+        <ScrollViewer Grid.Row="2">
+            <StackPanel x:Name="MainStackPanel">
+                <!-- Сюда генерируются заказы-->
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

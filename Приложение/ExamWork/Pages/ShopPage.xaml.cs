@@ -1,16 +1,22 @@
-﻿using ExamWork.Classes;
+﻿using DataBaseLibrary.Models;
+using DataBaseLibrary.Services;
+using ExamWork.Classes;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using static System.Net.Mime.MediaTypeNames;
 using DAL = ExamWork.Classes.DataAccessLayer;
 
 namespace ExamWork.Pages
 {
     public partial class ShopPage : Page
     {
-        internal List<Product> Products { get; set; }
+        private ProductService _service = new();
+
+        internal List<ExamProduct> Products { get; set; }
+
         public string SortQuery { get; set; }
 
         public ShopPage()
@@ -25,27 +31,41 @@ namespace ExamWork.Pages
             UserFullnameLabel.Content = $"{App.Current.Resources["UserSurname"].ToString()} " +
                                          $"{App.Current.Resources["UserName"].ToString()} " +
                                          $"{App.Current.Resources["UserPatronymic"].ToString()}";
+
+            if ((string)App.Current.Resources["UserName"] == "Гость" || (byte)App.Current.Resources["RoleID"] == 2)
+            {
+                ExitImage.Visibility = Visibility.Hidden;
+                EnterImage.Visibility = Visibility.Visible;
+                OrderWorkImage.Visibility = Visibility.Collapsed;
+            }
+            else 
+            {
+                ExitImage.Visibility = Visibility.Visible;
+                EnterImage.Visibility = Visibility.Hidden;
+                OrderWorkImage.Visibility = Visibility.Visible;
+            }
+
             //Подписка на обновление данных
+            /*
             SortComboBox.SelectionChanged += QueryBuilder;
             DiscountFilterComboBox.SelectionChanged += QueryBuilder;
             SearchTextBox.TextChanged += QueryBuilder;
+            */
 
             //Загружаем изначальные данные без фильтров
             UpdateProduct();
         }
 
-        //Метод выводящий карточки товаров
-        private void UpdateProduct()
+   
+        private async void UpdateProduct()
         {
-            Products = DAL.GetProductsData(SortQuery);
-            foreach (Product product in Products)
-            {
+            Products = await _service.GetProductsAsync("");
+
+            foreach (ExamProduct product in Products)           
                 CreateProductContainer(product);
-            }
-            countLabel.Content = $"Показано {Products.Count} из {DAL.GetProductsCount()}";
+            countLabel.Content = $"Показано {Products.Count} из {await _service.GetProductsCountAsync()}";
         }
 
-        //Метод для сбора данных из фильтров и поиска, и для составления запроса в БД
         private void QueryBuilder(object sender, RoutedEventArgs e)
         {
             //Очищаем все карточки товаров
@@ -83,8 +103,7 @@ namespace ExamWork.Pages
             UpdateProduct();
         }
 
-        //Метод для создания карточек товаров из листа товаров
-        private void CreateProductContainer(Product product)
+        private void CreateProductContainer(ExamProduct product)
         {
             Border border = new()
             {
@@ -114,12 +133,12 @@ namespace ExamWork.Pages
             {
                 Content = product.Manufacturer,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                Margin = new Thickness(0, -10, 0, 0),
                 Foreground = new SolidColorBrush(Color.FromArgb(255, 152, 144, 144))
             };
 
-            Label вescriptionLabel = new()
+            Label descriptionLabel = new()
             {
+                Margin = new Thickness(0, -10, 0, 0),
                 Content = product.Description,
                 HorizontalAlignment = HorizontalAlignment.Left
             };
@@ -136,23 +155,24 @@ namespace ExamWork.Pages
                 FontSize = 16
             };
 
-            TextBlock discounCostTextBlock = new()
+            TextBlock CostTextBlock = new()
             {
-                Text = Math.Round(product.Cost - (product.Cost * product.DiscountAmount * 0.01), 2).ToString(),
-                Height = 20,
-                FontSize = 18
+                Text = product.Cost.ToString(),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+                FontSize = 16,
+                Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0))
             };
 
-            Border imageBorder = new()
+            Button addProductItemButton = new()
             {
-                Background = new SolidColorBrush(Color.FromArgb(255, 206, 194, 194)),
-                Height = 100,
+                Content = "Заказать",
+                Background = new SolidColorBrush(Color.FromRgb(166, 166, 166)),
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Width = 100,
+                Height = 30,
 
-            };
-
-            Image image = new()
-            {
-                Source = new BitmapImage(new Uri("/Images/product.png", UriKind.Relative))
             };
 
             MainStackPanel.Children.Add(border);
@@ -165,69 +185,17 @@ namespace ExamWork.Pages
 
             grid.Children.Add(stackPanel2);
             stackPanel2.Children.Add(nameProductLabel);
+            stackPanel2.Children.Add(descriptionLabel);
             stackPanel2.Children.Add(manufacturerProductLabel);
-            stackPanel2.Children.Add(вescriptionLabel);
             stackPanel2.Children.Add(stackPanel3);
 
             stackPanel3.Children.Add(textLabel);
-            stackPanel3.Children.Add(discounCostTextBlock);
-
-            //Условие для скидко (чтоб скидка была показана и цена перечеркнута)
-            if (product.DiscountAmount > 0)
-            {
-                TextBlock CostTextBlock = new()
-                {
-                    Text = product.Cost.ToString(),
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    FontSize = 16,
-                    TextDecorations = TextDecorations.Strikethrough,
-                    Foreground = new SolidColorBrush(Color.FromArgb(255, 93, 93, 93))
-                };
-
-                Label discountLabel = new()
-                {
-                    Content = $"-{product.DiscountAmount}%",
-                    FontSize = 40,
-                    VerticalAlignment = VerticalAlignment.Bottom,
-                    Margin = new Thickness(0, 0, 10, 5),
-                    Background = new SolidColorBrush((product.DiscountAmount < 15) ? Colors.White : Colors.Chartreuse),
-                };
-
-                stackPanel3.Children.Add(CostTextBlock);
-                grid.Children.Add(discountLabel);
-                Grid.SetColumn(discountLabel, 1);
-            }
-
-            imageBorder.Child = image;
-            grid.Children.Add(imageBorder);
-
-            Grid.SetColumn(stackPanel2, 0);
-            Grid.SetColumn(imageBorder, 2);
-
-
-            //Контекствое меню
-            MenuItem addProductItem = new() 
-            {
-                Header = "Добавить к заказу",
-            };
-            addProductItem.Click += AddProduct_Click;
-
-            ContextMenu productContextMenu = new();
-            productContextMenu.Items.Add(addProductItem);
-
-            //Проверка на роль
-            switch (Convert.ToInt32(App.Current.Resources["RoleID"]))
-            {
-                case 1: //Менеджек
-
-                    break;
-                case 3://Администратор
-
-                    break;
-            }
+            stackPanel3.Children.Add(CostTextBlock);
             
-            MainStackPanel.ContextMenu = productContextMenu;
-            
+          
+            addProductItemButton.Click += AddProduct_Click;
+            grid.Children.Add(addProductItemButton);
+            Grid.SetColumn(addProductItemButton, 1);
         }
 
         private void AddProduct_Click(object sender, RoutedEventArgs e)
@@ -235,17 +203,26 @@ namespace ExamWork.Pages
            //необходимо реализовать добавление товара в корзину
         }
 
-        //Метод отправляющий нас на стартовую страницу
-        private void ExitImage_MouseDown(object sender, RoutedEventArgs e)
-        {
-            App.CurrentFrame.Navigate(new AuthorizationPage());
-        }
-
-        //Метод отправляющий нас на страницу карзины
         private void CartImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
             //необходимо реализовать переход в корзину
         }
 
+        private void Image_MouseDown(object sender, RoutedEventArgs e) 
+            => App.CurrentFrame.Navigate(new AuthorizationPage());
+
+        private void OrderWorkImage_MouseDown(object sender, MouseButtonEventArgs e) 
+            => App.CurrentFrame.Navigate(new OrdersWorkPage());
+
+        private void ExitImage_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            App.Current.Resources["UserID"] = null;
+            App.Current.Resources["UserName"] = null;
+            App.Current.Resources["UserSurname"] = null;
+            App.Current.Resources["UserPatronymic"] = null;
+            App.Current.Resources["UserLogin"] = null;
+            App.Current.Resources["UserPassword"] = null;
+            App.CurrentFrame.Navigate(new AuthorizationPage());
+        }
     }
 }
