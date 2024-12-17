@@ -4,6 +4,7 @@ namespace Exam
 {
     public class Order
     {
+        #region Свойства
         public int OrderID { get; set; }
         public User UserID { get; set; }
         public string Status { get; set; }
@@ -11,5 +12,6 @@ namespace Exam
         public DateTime DeliveryDate { get; set; }
         public PickupPoint PickupPointIndex { get; set; }
         public int PickupCode { get; set; }
+        #endregion
     }
 }
