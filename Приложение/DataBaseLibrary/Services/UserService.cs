@@ -1,22 +1,21 @@
-﻿using DataBaseLibrary.Data;
+﻿using DataBaseLibrary.Models;
+using DataBaseLibrary.Data;
+using Microsoft.EntityFrameworkCore;
+using ExamWork.Classes;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace DataBaseLibrary.Services
 {
-    class UserService
+    public class UserService
     {
-        private readonly AddDbContext _context;
+        private readonly AddDbContext _context = new();
 
-        public UserService()
-        {
-            _context = new AddDbContext();
-        }
+        public async Task<bool> IsUserExistAsync(string login, string password) 
+            => (await _context.ExamUsers.SingleOrDefaultAsync(u => u.Login == login && u.Password == password) != null) ? true : false;
 
-        #region Методы
-        public void Method()
-        {
+        public async Task<ExamUser> GetUserAsync(string login, string password) 
+            => await _context.ExamUsers.SingleAsync(u => u.Login == login && u.Password == password);
 
-        }
-
-        #endregion
     }
 }
