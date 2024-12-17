@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ExamWork.Classes
 {
-    internal class Product 
+    public class Product 
     {
         #region Свойства 
         public string ArticleNumber { get; set; }
