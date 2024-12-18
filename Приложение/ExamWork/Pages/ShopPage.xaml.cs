@@ -1,12 +1,15 @@
 ﻿using DataBaseLibrary.Models;
 using DataBaseLibrary.Services;
 using ExamWork.Classes;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using DAL = ExamWork.Classes.DataAccessLayer;
 
 namespace ExamWork.Pages
@@ -27,6 +30,7 @@ namespace ExamWork.Pages
         //Метод загружающий данные после загрузки страницы
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            border.Height = 0;
             //Вывод ФИО на страницу
             UserFullnameLabel.Content = $"{App.Current.Resources["UserSurname"].ToString()} " +
                                          $"{App.Current.Resources["UserName"].ToString()} " +
@@ -223,6 +227,25 @@ namespace ExamWork.Pages
             App.Current.Resources["UserLogin"] = null;
             App.Current.Resources["UserPassword"] = null;
             App.CurrentFrame.Navigate(new AuthorizationPage());
+        }
+
+        private void FilterButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation animation = new DoubleAnimation();
+            if (!IsToggle)
+            {
+                animation.To = 180;
+                animation.Duration = TimeSpan.FromSeconds(0.3);
+                border.BeginAnimation(Border.HeightProperty, animation);
+                IsToggle = true;
+            }
+            else
+            {
+                animation.To = 0;
+                animation.Duration = TimeSpan.FromSeconds(0.3);
+                border.BeginAnimation(Border.HeightProperty, animation);
+                IsToggle = false;
+            }
         }
     }
 }
