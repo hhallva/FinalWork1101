@@ -48,7 +48,6 @@ namespace ExamWork.Pages
                 OrderWorkImage.Visibility = Visibility.Visible;
             }
 
-
             await FillManufacturerComboBoxAsync();
             await UpdateProductAsync();
         }
@@ -61,20 +60,19 @@ namespace ExamWork.Pages
 
         private async Task UpdateProductAsync()
         {
-            decimal? fromCost = null;
-            decimal? toCost = null;
-
-            if (!string.IsNullOrWhiteSpace(FromTextBox.Text) && decimal.TryParse(FromTextBox.Text, out decimal parsedFromCost))
+            try
             {
-                fromCost = parsedFromCost;
-            }
+                decimal? fromCost = null;
+                decimal? toCost = null;
 
-            if (!string.IsNullOrWhiteSpace(ToTextBox.Text) && decimal.TryParse(ToTextBox.Text, out decimal parsedToCost))
-            {
-                toCost = parsedToCost;
-            }
+                if (!string.IsNullOrWhiteSpace(FromTextBox.Text) && decimal.TryParse(FromTextBox.Text, out decimal parsedFromCost))
+                    fromCost = parsedFromCost;
 
-            Products = await _service.GetProductsAsync(
+                if (!string.IsNullOrWhiteSpace(ToTextBox.Text) && decimal.TryParse(ToTextBox.Text, out decimal parsedToCost))
+                    toCost = parsedToCost;
+
+
+                Products = await _service.GetProductsAsync(
                 SearchTextBox.Text,
                 SortComboBox.SelectedIndex,
                 fromCost.GetValueOrDefault(), // Если fromCost == null, будет использовано значение по умолчанию 0
@@ -82,21 +80,53 @@ namespace ExamWork.Pages
                 ManufacturerComboBox.SelectedValue.ToString()
                 );
 
-            foreach (ExamProduct product in Products)
-                CreateProductContainer(product);
-            countLabel.Content = $"Показано {Products.Count} из {await _service.GetProductsCountAsync()}";
+                foreach (ExamProduct product in Products)
+                    CreateProductContainer(product);
+                countLabel.Content = $"Показано {Products.Count} из {await _service.GetProductsCountAsync()}";
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913."))
+                    MessageBox.Show("Ты слишком быстро вводишь символы!");
+                if (ex.Message.Contains($" is out of range."))
+                    MessageBox.Show("Это слишком большое число!");
+                else
+                    MessageBox.Show($"Ошибка: {ex}");
+            }
         }
 
         public async Task FillManufacturerComboBoxAsync()
         {
-            var manufacturers = await _service.GetManufacturersAsync();
-
-            if (manufacturers != null)
+            try
             {
-                foreach (var manufacturer in manufacturers)
-                {
-                    ManufacturerComboBox.Items.Add(manufacturer);
-                }
+                var manufacturers = await _service.GetManufacturersAsync();
+
+                if (manufacturers != null)
+                    foreach (var manufacturer in manufacturers)
+                        ManufacturerComboBox.Items.Add(manufacturer);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex}");
+            }
+        }
+
+        private void FilterButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation animation = new DoubleAnimation();
+            if (!IsToggle)
+            {
+                animation.To = 180;
+                animation.Duration = TimeSpan.FromSeconds(0.3);
+                border.BeginAnimation(Border.HeightProperty, animation);
+                IsToggle = true;
+            }
+            else
+            {
+                animation.To = 0;
+                animation.Duration = TimeSpan.FromSeconds(0.3);
+                border.BeginAnimation(Border.HeightProperty, animation);
+                IsToggle = false;
             }
         }
 
@@ -200,16 +230,16 @@ namespace ExamWork.Pages
             //необходимо реализовать добавление товара в корзину
         }
 
+        private void OrderWorkImage_MouseDown(object sender, MouseButtonEventArgs e)
+         => App.CurrentFrame.Navigate(new OrdersWorkPage());
+
         private void CartImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
             //необходимо реализовать переход в корзину
         }
 
-        private void Image_MouseDown(object sender, RoutedEventArgs e)
+        private void EnterImage_MouseDown(object sender, RoutedEventArgs e)
             => App.CurrentFrame.Navigate(new AuthorizationPage());
-
-        private void OrderWorkImage_MouseDown(object sender, MouseButtonEventArgs e)
-            => App.CurrentFrame.Navigate(new OrdersWorkPage());
 
         private void ExitImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -221,25 +251,5 @@ namespace ExamWork.Pages
             App.Current.Resources["UserPassword"] = null;
             App.CurrentFrame.Navigate(new AuthorizationPage());
         }
-
-        private void FilterButton_Click(object sender, RoutedEventArgs e)
-        {
-            DoubleAnimation animation = new DoubleAnimation();
-            if (!IsToggle)
-            {
-                animation.To = 180;
-                animation.Duration = TimeSpan.FromSeconds(0.3);
-                border.BeginAnimation(Border.HeightProperty, animation);
-                IsToggle = true;
-            }
-            else
-            {
-                animation.To = 0;
-                animation.Duration = TimeSpan.FromSeconds(0.3);
-                border.BeginAnimation(Border.HeightProperty, animation);
-                IsToggle = false;
-            }
-        }
-
     }
 }

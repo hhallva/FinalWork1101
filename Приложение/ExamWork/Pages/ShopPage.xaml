@@ -44,7 +44,7 @@
                 <Image x:Name="OrderWorkImage"  Grid.Column="3" Height="20" Source="/Images/settings.png" DockPanel.Dock="Right" MouseDown="OrderWorkImage_MouseDown"  Style="{StaticResource HoverImage}"/>
                 <Image x:Name="CartImage"       Grid.Column="4" Height="20" Source="/Images/cart.png"     DockPanel.Dock="Right" MouseDown="CartImage_MouseDown" Style="{StaticResource HoverImage}"/>
                 <Image x:Name="ExitImage"       Grid.Column="5" Height="20" Source="/Images/exit.png"     DockPanel.Dock="Right" MouseDown="ExitImage_MouseDown" Style="{StaticResource HoverImage}"/>
-                <Image x:Name="EnterImage"      Grid.Column="5" Height="20" Source="/Images/enter.png"    DockPanel.Dock="Right" MouseDown="Image_MouseDown" Style="{StaticResource HoverImage}"/>
+                <Image x:Name="EnterImage"      Grid.Column="5" Height="20" Source="/Images/enter.png"    DockPanel.Dock="Right" MouseDown="EnterImage_MouseDown" Style="{StaticResource HoverImage}"/>
             </Grid>
         </Border>
 
@@ -64,7 +64,7 @@
                     <ColumnDefinition Width="140"/>
                 </Grid.ColumnDefinitions>
 
-               
+
                 <Label Content="Поиск: " Grid.Column="1" HorizontalAlignment="Right"/>
                 <TextBox x:Name="SearchTextBox" Grid.Column="2" VerticalContentAlignment="Center"/>
                 <Label x:Name="countLabel" Content="Показано 0 из 0" Grid.Column="3" />
@@ -79,12 +79,12 @@
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            
+
 
                             <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5">
                                 <Label Content="Производитель"  HorizontalAlignment="Left"/>
                                 <ComboBox x:Name="ManufacturerComboBox" SelectedIndex="0" Width="150" >
-                                    <ComboBoxItem Content="Все"/>
+                                    <ComboBoxItem Content="Все производители"/>
                                     <!--Сюда будут генерироваться все производители-->
                                 </ComboBox>
                             </StackPanel>
@@ -112,7 +112,7 @@
                     </Border>
                 </Canvas>
             </Grid>
-            
+
         </Grid>
     </Grid>
 </Page>
