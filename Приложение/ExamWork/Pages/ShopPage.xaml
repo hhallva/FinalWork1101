@@ -84,7 +84,7 @@
                             <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5">
                                 <Label Content="Производитель"  HorizontalAlignment="Left"/>
                                 <ComboBox x:Name="ManufacturerComboBox" SelectedIndex="0" Width="150" >
-                                    <ComboBoxItem Content="Все производители"/>
+                                    <ComboBoxItem Content="Все"/>
                                     <!--Сюда будут генерироваться все производители-->
                                 </ComboBox>
                             </StackPanel>
@@ -105,7 +105,7 @@
                                     <TextBox x:Name="FromTextBox" Width="50"/>
 
                                     <Label Content="До"/>
-                                    <TextBox x:Name="ToTextBox" TextChanged="ToTextBox_TextChanged" Width="50"/>
+                                    <TextBox x:Name="ToTextBox" Width="50"/>
                                 </StackPanel>
                             </StackPanel>
                         </Grid>

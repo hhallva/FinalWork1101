@@ -1,40 +1,39 @@
 ﻿using DataBaseLibrary.Models;
 using DataBaseLibrary.Services;
-using ExamWork.Classes;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using DAL = ExamWork.Classes.DataAccessLayer;
 
 namespace ExamWork.Pages
 {
     public partial class ShopPage : Page
     {
+        private List<ExamProduct> Products { get; set; }
+
         private ProductService _service = new();
 
-        internal List<ExamProduct> Products { get; set; }
-
-        public string SortQuery { get; set; }
+        private bool IsToggle;
 
         public ShopPage()
         {
             InitializeComponent();
+
+            SearchTextBox.TextChanged += Filters_Changed;
+            FromTextBox.TextChanged += Filters_Changed;
+            ToTextBox.TextChanged += Filters_Changed;
+            SortComboBox.SelectionChanged += Filters_Changed;
+            ManufacturerComboBox.SelectionChanged += Filters_Changed;
         }
-        
-        //Метод загружающий данные после загрузки страницы
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             border.Height = 0;
-            //Вывод ФИО на страницу
+
             UserFullnameLabel.Content = $"{App.Current.Resources["UserSurname"].ToString()} " +
-                                         $"{App.Current.Resources["UserName"].ToString()} " +
-                                         $"{App.Current.Resources["UserPatronymic"].ToString()}";
+                                        $"{App.Current.Resources["UserName"].ToString()} " +
+                                        $"{App.Current.Resources["UserPatronymic"].ToString()}";
 
             if ((string)App.Current.Resources["UserName"] == "Гость" || (byte)App.Current.Resources["RoleID"] == 2)
             {
@@ -42,69 +41,63 @@ namespace ExamWork.Pages
                 EnterImage.Visibility = Visibility.Visible;
                 OrderWorkImage.Visibility = Visibility.Collapsed;
             }
-            else 
+            else
             {
                 ExitImage.Visibility = Visibility.Visible;
                 EnterImage.Visibility = Visibility.Hidden;
                 OrderWorkImage.Visibility = Visibility.Visible;
             }
 
-            //Подписка на обновление данных
-            /*
-            SortComboBox.SelectionChanged += QueryBuilder;
-            DiscountFilterComboBox.SelectionChanged += QueryBuilder;
-            SearchTextBox.TextChanged += QueryBuilder;
-            */
 
-            //Загружаем изначальные данные без фильтров
-            UpdateProduct();
+            await FillManufacturerComboBoxAsync();
+            await UpdateProductAsync();
         }
 
-   
-        private async void UpdateProduct()
+        private async void Filters_Changed(object sender, RoutedEventArgs e)
         {
-            Products = await _service.GetProductsAsync("");
+            MainStackPanel.Children.Clear();
+            await UpdateProductAsync();
+        }
 
-            foreach (ExamProduct product in Products)           
+        private async Task UpdateProductAsync()
+        {
+            decimal? fromCost = null;
+            decimal? toCost = null;
+
+            if (!string.IsNullOrWhiteSpace(FromTextBox.Text) && decimal.TryParse(FromTextBox.Text, out decimal parsedFromCost))
+            {
+                fromCost = parsedFromCost;
+            }
+
+            if (!string.IsNullOrWhiteSpace(ToTextBox.Text) && decimal.TryParse(ToTextBox.Text, out decimal parsedToCost))
+            {
+                toCost = parsedToCost;
+            }
+
+            Products = await _service.GetProductsAsync(
+                SearchTextBox.Text,
+                SortComboBox.SelectedIndex,
+                fromCost.GetValueOrDefault(), // Если fromCost == null, будет использовано значение по умолчанию 0
+                toCost, // Может быть null, это обрабатывается в методе GetProductsAsync
+                ManufacturerComboBox.SelectedValue.ToString()
+                );
+
+            foreach (ExamProduct product in Products)
                 CreateProductContainer(product);
             countLabel.Content = $"Показано {Products.Count} из {await _service.GetProductsCountAsync()}";
         }
 
-        private void QueryBuilder(object sender, RoutedEventArgs e)
+        public async Task FillManufacturerComboBoxAsync()
         {
-            //Очищаем все карточки товаров
-            MainStackPanel.Children.Clear();
+            var manufacturers = await _service.GetManufacturersAsync();
 
-            //Сбор запроса в соответствии с данными фильтов 
-            SortQuery = $"WHERE ProductName LIKE '%{SearchTextBox.Text}%'";
-            switch (DiscountFilterComboBox.SelectedIndex)
+            if (manufacturers != null)
             {
-                case 0:
-                    SortQuery += "";
-                    break;
-                case 1:
-                    SortQuery += "AND ProductDiscountAmount BETWEEN 0 AND 9.99";
-                    break;
-                case 2:
-                    SortQuery += "AND ProductDiscountAmount BETWEEN 10 AND 14.99";
-                    break;
-                case 3:
-                    SortQuery += "AND ProductDiscountAmount BETWEEN 15 AND 100";
-                    break;
+                foreach (var manufacturer in manufacturers)
+                {
+                    ManufacturerComboBox.Items.Add(manufacturer);
+                }
             }
-
-            switch (SortComboBox.SelectedIndex)
-            {
-                case 0:
-                    SortQuery += " ORDER BY ROUND(ProductCost - (ProductCost * ProductDiscountAmount*0.01),2) ASC";
-                    break;
-                case 1:
-                    SortQuery += " ORDER BY ROUND(ProductCost - (ProductCost * ProductDiscountAmount*0.01),2) DESC";
-                    break;
-            }
-
-            //Обновляем карточки товаров
-            UpdateProduct();
         }
 
         private void CreateProductContainer(ExamProduct product)
@@ -195,8 +188,8 @@ namespace ExamWork.Pages
 
             stackPanel3.Children.Add(textLabel);
             stackPanel3.Children.Add(CostTextBlock);
-            
-          
+
+
             addProductItemButton.Click += AddProduct_Click;
             grid.Children.Add(addProductItemButton);
             Grid.SetColumn(addProductItemButton, 1);
@@ -204,7 +197,7 @@ namespace ExamWork.Pages
 
         private void AddProduct_Click(object sender, RoutedEventArgs e)
         {
-           //необходимо реализовать добавление товара в корзину
+            //необходимо реализовать добавление товара в корзину
         }
 
         private void CartImage_MouseDown(object sender, MouseButtonEventArgs e)
@@ -212,10 +205,10 @@ namespace ExamWork.Pages
             //необходимо реализовать переход в корзину
         }
 
-        private void Image_MouseDown(object sender, RoutedEventArgs e) 
+        private void Image_MouseDown(object sender, RoutedEventArgs e)
             => App.CurrentFrame.Navigate(new AuthorizationPage());
 
-        private void OrderWorkImage_MouseDown(object sender, MouseButtonEventArgs e) 
+        private void OrderWorkImage_MouseDown(object sender, MouseButtonEventArgs e)
             => App.CurrentFrame.Navigate(new OrdersWorkPage());
 
         private void ExitImage_MouseDown(object sender, MouseButtonEventArgs e)
@@ -247,5 +240,6 @@ namespace ExamWork.Pages
                 IsToggle = false;
             }
         }
+
     }
 }
