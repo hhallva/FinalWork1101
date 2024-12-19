@@ -10,8 +10,8 @@
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
         <!--ШАПКА-->
@@ -21,21 +21,53 @@
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="30"/>
                 </Grid.ColumnDefinitions>
 
-                <Image Source="/Images/logo.png"/>
+                <Image Grid.Column="0" Source="/Images/logo.png"/>
                 <Label Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Корзина" FontSize="15"/>
 
-                <StackPanel Orientation="Horizontal" Grid.Column="2" Margin="18,0,0,0">
+                <StackPanel Grid.Column="2" Orientation="Horizontal"  Margin="18,0,0,0">
                     <Image  Source="/Images/user.png" Margin="0,6,0,6" />
                     <Label VerticalAlignment="Center" x:Name="UserFullnameLabel" Content="Гость" FontSize="15"/>
                 </StackPanel>
 
-                <Image x:Name="OldersListImage"  HorizontalAlignment="Right"  Margin="0,0,5,0" Grid.Column="4" Height="20" Source="/Images/list.png" MouseDown="OldersListImage_MouseDown" Style="{StaticResource HoverImage}"/>
-                <Image x:Name="BackImage"  HorizontalAlignment="Right"  Margin="0,0,5,0" Grid.Column="5" Height="20" Source="/Images/backArrow.png" MouseDown="BackImage_MouseDown" Style="{StaticResource HoverImage}"/>
+                <Image Grid.Column="3" x:Name="OldersListImage"  HorizontalAlignment="Right"  Margin="0,0,5,0"  Height="20" Source="/Images/list.png" MouseDown="OldersListImage_MouseDown" Style="{StaticResource HoverImage}"/>
+                <Image Grid.Column="4" x:Name="BackImage"  HorizontalAlignment="Right"  Margin="0,0,5,0" Height="20" Source="/Images/backArrow.png" MouseDown="BackImage_MouseDown" Style="{StaticResource HoverImage}"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" Background="#FFCC99" Margin="4">
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Пункт выдачи:" FontSize="15"/>
+                <ComboBox Grid.Column="1" x:Name="PickupPointsComboBox" MaxWidth="120" Margin="4">
+                    
+                </ComboBox>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Label Content="Товаров:"/>
+                    <Label x:Name="CountProductsInOrderLabel"   Content="0"/>
+                    <Label Content="Скидка:"  />
+                    <Label x:Name="OrderDiscountLabel" Width="120"  />
+                    <Label Content="Итого:" />
+                    <Label x:Name="OrderCostLabel" Width="120" />
+
+                    
+
+
+                </StackPanel>
+                
+                <Button Grid.Column="3" x:Name="MakeOrderButton" Content="Оформить заказ" Margin="4"/>
+
+                
             </Grid>
         </Border>
     </Grid>
