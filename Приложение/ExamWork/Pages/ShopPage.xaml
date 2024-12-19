@@ -27,6 +27,7 @@
         <Border Background="#FFCC99" Margin="4">
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
@@ -35,16 +36,17 @@
                     <ColumnDefinition Width="30"/>
 
                 </Grid.ColumnDefinitions>
-
-                <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="18,0,0,0">
+                <Image Source="/Images/logo.png"/>
+                
+                <StackPanel Orientation="Horizontal" Grid.Column="2" Margin="18,0,0,0">
                     <Image  Source="/Images/user.png" Margin="0,6,0,6" />
                     <Label VerticalAlignment="Center" x:Name="UserFullnameLabel" Content="Гость" FontSize="15"/>
                 </StackPanel>
 
-                <Image x:Name="OrderWorkImage"  Grid.Column="3" Height="20" Source="/Images/settings.png" DockPanel.Dock="Right" MouseDown="OrderWorkImage_MouseDown"  Style="{StaticResource HoverImage}"/>
-                <Image x:Name="CartImage"       Grid.Column="4" Height="20" Source="/Images/cart.png"     DockPanel.Dock="Right" MouseDown="CartImage_MouseDown" Style="{StaticResource HoverImage}"/>
-                <Image x:Name="ExitImage"       Grid.Column="5" Height="20" Source="/Images/exit.png"     DockPanel.Dock="Right" MouseDown="ExitImage_MouseDown" Style="{StaticResource HoverImage}"/>
-                <Image x:Name="EnterImage"      Grid.Column="5" Height="20" Source="/Images/enter.png"    DockPanel.Dock="Right" MouseDown="EnterImage_MouseDown" Style="{StaticResource HoverImage}"/>
+                <Image x:Name="OrderWorkImage"  Grid.Column="4" Height="20" Source="/Images/settings.png" DockPanel.Dock="Right" MouseDown="OrderWorkImage_MouseDown"  Style="{StaticResource HoverImage}"/>
+                <Image x:Name="CartImage"       Grid.Column="5" Height="20" Source="/Images/cart.png"     DockPanel.Dock="Right" MouseDown="CartImage_MouseDown" Style="{StaticResource HoverImage}"/>
+                <Image x:Name="ExitImage"       Grid.Column="6" Height="20" Source="/Images/exit.png"     DockPanel.Dock="Right" MouseDown="ExitImage_MouseDown" Style="{StaticResource HoverImage}"/>
+                <Image x:Name="EnterImage"      Grid.Column="6" Height="20" Source="/Images/enter.png"    DockPanel.Dock="Right" MouseDown="EnterImage_MouseDown" Style="{StaticResource HoverImage}"/>
             </Grid>
         </Border>
 

@@ -43,11 +43,11 @@ namespace DataBaseLibrary.Services
         public async Task<List<string>> GetManufacturersAsync()
         {
             var manufacturers = await _context.ExamProducts
-                .Select(p => p.Manufacturer) 
-                .Distinct()                
-                .Where(m => !string.IsNullOrEmpty(m)) 
-                .OrderBy(m => m)            
-                .ToListAsync();            
+                .Select(p => p.Manufacturer)
+                .Distinct()
+                .Where(m => !string.IsNullOrEmpty(m))
+                .OrderBy(m => m)
+                .ToListAsync();
 
             return manufacturers;
         }

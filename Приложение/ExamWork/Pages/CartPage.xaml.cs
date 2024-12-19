@@ -5,11 +5,11 @@ using System.Windows.Input;
 namespace ExamWork.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для OrderPage.xaml
+    /// Логика взаимодействия для CartPage.xaml
     /// </summary>
-    public partial class OrderPage : Page
+    public partial class CartPage : Page
     {
-        public OrderPage()
+        public CartPage()
         {
             InitializeComponent();
         }
@@ -22,7 +22,9 @@ namespace ExamWork.Pages
         }
 
         private void BackImage_MouseDown(object sender, MouseButtonEventArgs e)
-             => App.CurrentFrame.Navigate(new CartPage());
+             => App.CurrentFrame.Navigate(new ShopPage());
 
+        private void OldersListImage_MouseDown(object sender, MouseButtonEventArgs e)
+            => App.CurrentFrame.Navigate(new OrderPage());
     }
 }

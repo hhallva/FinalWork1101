@@ -234,9 +234,7 @@ namespace ExamWork.Pages
          => App.CurrentFrame.Navigate(new OrdersWorkPage());
 
         private void CartImage_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            //необходимо реализовать переход в корзину
-        }
+            => App.CurrentFrame.Navigate(new CartPage());
 
         private void EnterImage_MouseDown(object sender, RoutedEventArgs e)
             => App.CurrentFrame.Navigate(new AuthorizationPage());

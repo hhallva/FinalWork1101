@@ -45,9 +45,7 @@ namespace ExamWork.Pages
 
         }
 
-        private void BackImage_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            App.CurrentFrame.Navigate(new ShopPage());
-        }
+        private void BackImage_MouseDown(object sender, MouseButtonEventArgs e) 
+            => App.CurrentFrame.Navigate(new ShopPage());
     }
 }

@@ -6,9 +6,36 @@
       xmlns:local="clr-namespace:ExamWork.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="OrderPage">
+      Title="OrderPage"
+      Loaded="Page_Loaded">
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-    <Grid>
-        
+        <!--ШАПКА-->
+        <Border Background="#FFCC99" Margin="4">
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="90"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/Images/logo.png"/>
+                <Label Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Ваши заказы" FontSize="15"/> 
+
+                <StackPanel Orientation="Horizontal" Grid.Column="2" Margin="18,0,0,0">
+                    <Image  Source="/Images/user.png" Margin="0,6,0,6" />
+                    <Label VerticalAlignment="Center" x:Name="UserFullnameLabel" Content="Гость" FontSize="15"/>
+                </StackPanel>
+
+                <Image x:Name="BackImage"  HorizontalAlignment="Right"  Margin="0,0,5,0" Grid.Column="4" Height="20" Source="/Images/backArrow.png" MouseDown="BackImage_MouseDown" Style="{StaticResource HoverImage}"/>
+            </Grid>
+        </Border>
     </Grid>
 </Page>
